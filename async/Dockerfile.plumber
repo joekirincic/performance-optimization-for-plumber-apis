@@ -1,0 +1,28 @@
+FROM devxygmbh/r-ubuntu
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libsodium-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install R packages from binaries
+RUN R -e "install.packages('pak')"
+RUN R -e "pak::pak(c('plumber', 'plumber2', 'DBI', 'RPostgres', 'devtools', 'mirai', 'promises', 'optparse', 'palmerpenguins'))"
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY R .
+
+# Expose port
+EXPOSE 8000
+EXPOSE 8001
+EXPOSE 8002
+
+# Run the API
+CMD ["Rscript", "main.R", "--app=sync"]

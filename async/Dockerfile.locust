@@ -1,0 +1,17 @@
+
+FROM python:3.11-slim
+
+# Install locust
+RUN pip install locust
+
+# Set working directory
+WORKDIR /app
+
+# Copy locust file
+COPY locustfile.py .
+
+# Expose port for web UI
+EXPOSE 8089
+
+# Default command to run locust with web UI
+CMD ["locust", "-f", "locustfile.py", "--host=http://plumber-api:8000"]

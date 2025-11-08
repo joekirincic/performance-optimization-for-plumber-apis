@@ -1,0 +1,77 @@
+
+services:
+  plumber2-sync-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: plumber2-sync-api
+    command: R --file=main.R --args --app=sync_plumber2
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  plumber2-async-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: plumber2-async-api
+    command: R --file=main.R --args --app=async_plumber2
+    env_file: 
+      - .env
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+  
+  plumber-async-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: plumber-async-api
+    command: R --file=main.R --args --app=async_plumber
+    env_file: 
+      - .env
+    ports:
+      - "8002:8002"
+    restart: unless-stopped
+  
+  postgres:
+    image: postgres:15
+    container_name: penguins-db
+    environment:
+      POSTGRES_DB: penguins_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+  
+  populate-db:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: populate-db
+    command: R --file=seed-database.R
+    env_file: 
+      - .env
+    depends_on:
+      - postgres
+
+  locust:
+    build:
+      context: .
+      dockerfile: Dockerfile.locust
+    container_name: locust
+    ports:
+      - "8089:8089"
+    depends_on:
+      - plumber2-sync-api
+      - plumber2-async-api
+      - plumber-async-api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
