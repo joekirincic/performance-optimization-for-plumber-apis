@@ -148,6 +148,8 @@ Default test configuration:
 
 -   Random wait time: 1-2 seconds between requests
 
+-   Total duration of 1 minute.
+
 ## Cleanup
 
 ``` bash
