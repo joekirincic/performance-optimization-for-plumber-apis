@@ -2,6 +2,17 @@
 
 This project load tests three APIs with a similar endpoint and compares their performance. The aim is to show the performance benefit of using async endpoints for I/O bound tasks.
 
+## Quickstart
+
+Running the following will spin up the Docker Compose stack, run all the load tests, and copy CSVs of the load test data to a directory called `load-test-results`. A high-level comparison is produced by running `R/compare-async-apis.R`.
+
+```{bash}
+docker compose up -d --build
+chmod +x ./generate-load-test-data.sh
+./generate-load-test-data.sh
+```
+
+
 ## Overview
 
 A brief description of each app is as follows.

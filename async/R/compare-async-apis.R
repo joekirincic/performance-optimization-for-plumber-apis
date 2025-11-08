@@ -12,14 +12,21 @@ cmp <- df |>
       str_remove_all(pattern = "\\.csv|load-test_")
   ) |>
   summarize(
-    min_response_time = min(response_time, na.rm = TRUE),
-    med_response_time = median(response_time, na.rm = TRUE),
-    max_response_time = max(response_time, na.rm = TRUE),
+    min_response_time_ms = min(response_time, na.rm = TRUE) |>
+      round(digits = 2),
+    med_response_time_ms = median(response_time, na.rm = TRUE) |>
+      round(digits = 2),
+    max_response_time_ms = max(response_time, na.rm = TRUE) |>
+      round(digits = 2),
     total_seconds = time_length(
       max(timestamp) - min(timestamp),
       unit = "second"
-    ),
+    ) |>
+      round(digits = 2),
     total_requests = n(),
-    rps = total_requests / total_seconds,
+    rps = (total_requests / total_seconds) |> round(digits = 2),
     .by = load_test
   )
+
+cmp |>
+  knitr::kable()
