@@ -28,7 +28,7 @@ The project includes a complete dockerized setup with a Postgres database, load 
 -   Docker and Docker Compose
 -   8GB+ RAM recommended for load testing with 200 concurrent users
 
-## Quick Start
+## Getting Started
 
 ### 1. Start All Services
 
