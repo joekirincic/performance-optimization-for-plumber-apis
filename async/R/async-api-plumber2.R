@@ -1,8 +1,13 @@
+# Load OpenTelemetry packages for automatic tracing
+# mirai automatically creates spans when these packages are loaded
+library(otel)
+library(otelsdk)
+
 library(plumber2)
 library(mirai)
 library(promises)
 
-mirai::daemons(4L, dispatcher = TRUE)
+mirai::daemons(6L, dispatcher = TRUE)
 
 mirai::everywhere(
   {
@@ -23,8 +28,11 @@ mirai::everywhere(
 )
 
 query_penguins <- function(con, n) {
+  spn <- otel::start_local_active_span("query_penguins")
+  on.exit(otel::end_span(spn))
   qry <- glue::glue("SELECT * FROM penguins LIMIT {n}")
   out <- DBI::dbGetQuery(con, qry)
+  out
 }
 
 #* Get results from a DB.
@@ -32,5 +40,6 @@ query_penguins <- function(con, n) {
 #* @query n:int
 #* @async
 function(query) {
-  query_penguins(con, query$n)
+  result <- query_penguins(con, query$n)
+  result
 }
