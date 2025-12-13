@@ -18,10 +18,19 @@ services:
       dockerfile: Dockerfile.plumber
     container_name: plumber2-async-api
     command: R --file=main.R --args --app=async_plumber2
-    env_file: 
+    env_file:
       - .env
+    environment:
+      # OpenTelemetry Configuration
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=plumber2-async-api,service.namespace=performance-testing,deployment.environment=local
+      - OTEL_LOG_LEVEL=info
     ports:
       - "8001:8001"
+    depends_on:
+      - jaeger
     restart: unless-stopped
   
   plumber-async-api:
@@ -71,6 +80,17 @@ services:
       - plumber2-sync-api
       - plumber2-async-api
       - plumber-async-api
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.52
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4317:4317"    # OTLP gRPC receiver
+      - "4318:4318"    # OTLP HTTP receiver
     restart: unless-stopped
 
 volumes:
