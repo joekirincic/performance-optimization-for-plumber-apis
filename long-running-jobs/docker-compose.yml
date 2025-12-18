@@ -1,0 +1,41 @@
+
+services:
+  naive-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: naive-api
+    command: R --file=main.R --args --app=naive_api
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
+
+  polling-pattern-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: polling-pattern-api
+    command: R --file=main.R --args --app=polling_pattern
+    ports:
+      - "8004:8004"
+    restart: unless-stopped
+  
+  webhook-pattern-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: webhook-pattern-api
+    command: R --file=main.R --args --app=webhook_pattern
+    ports:
+      - "8005:8005"
+    restart: unless-stopped
+  
+  webhook-client-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: webhook-client-api
+    command: R --file=main.R --args --app=webhook_client
+    ports:
+      - "8006:8006"
+    restart: unless-stopped

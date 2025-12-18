@@ -1,0 +1,36 @@
+FROM devxygmbh/r-ubuntu
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libsodium-dev \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install R packages from binaries
+RUN R -e "install.packages('pak')"
+# Install remaining packages
+RUN R -e "pak::pak(c('plumber2','plumber', 'DBI', 'RPostgres', 'devtools', 'mirai', 'promises', 'optparse', 'palmerpenguins', 'here', 'uuid', 'memoise', 'tidyr'))"
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY R .
+
+# Expose port
+EXPOSE 8003
+EXPOSE 8004
+EXPOSE 8005
+EXPOSE 8006
+
+# Run the API
+CMD ["Rscript", "main.R", "--app=naive_api"]
