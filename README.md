@@ -9,5 +9,6 @@ Below is a breakdown of the project.
 
 ```{r}
 ├── README.md
-└── async (Show how async improves performance with I/O bound tasks)
+└── async (Show how async improves performance with I/O bound tasks.)
+└── long-running-jobs (Shows how polling and webhooks improve performance on long-running tasks.)
 ```
