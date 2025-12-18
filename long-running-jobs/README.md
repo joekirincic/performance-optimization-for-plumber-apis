@@ -1,6 +1,6 @@
 # Long-Running Jobs with Plumber APIs
 
-This directory demonstrates different patterns for handling long-running tasks in Plumber APIs. It includes implementations of a naive async pattern, polling pattern, and webhook pattern using a machine learning model training example.
+This directory demonstrates different patterns for handling long-running tasks in Plumber APIs. It includes implementations of a naive async pattern, polling pattern, and webhook pattern.
 
 ## Overview
 
@@ -20,16 +20,6 @@ long-running-jobs/
 │   └── webhook-client-api.R    # Webhook client implementation
 └── README.md                   # This file
 ```
-
-## Shared Components
-
-All APIs use:
-
--   `{mirai}`: Async execution with 4 worker daemons
-
--   `{memoise}`: Caching for model loading operations
-
--   `{plumber2}`: Plumber API framework
 
 ## Docker
 
