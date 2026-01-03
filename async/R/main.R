@@ -25,5 +25,13 @@ switch(
   async_plumber = {
     app <- plumber::plumb("async-api-plumber.R")
     plumber::pr_run(app, "0.0.0.0", port = 8002L)
-  }
+  },
+  async_plumber2_manual = {
+    app <- plumber2::api(
+      "async-api-plumber2-manual.R",
+      host = "0.0.0.0",
+      port = 8003L
+    )
+    plumber2::api_run(app)
+  },
 )
