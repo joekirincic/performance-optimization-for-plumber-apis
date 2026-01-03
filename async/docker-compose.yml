@@ -20,17 +20,17 @@ services:
     command: R --file=main.R --args --app=async_plumber2
     env_file:
       - .env
-    environment:
-      # OpenTelemetry Configuration
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=plumber2-async-api,service.namespace=performance-testing,deployment.environment=local
-      - OTEL_LOG_LEVEL=info
+    # environment:
+    #   # OpenTelemetry Configuration
+    #   - OTEL_TRACES_EXPORTER=otlp
+    #   - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+    #   - OTEL_RESOURCE_ATTRIBUTES=service.name=plumber2-async-api,service.namespace=performance-testing,deployment.environment=local
+    #   - OTEL_LOG_LEVEL=info
     ports:
       - "8001:8001"
-    depends_on:
-      - jaeger
+    # depends_on:
+    #   - jaeger
     restart: unless-stopped
   
   plumber-async-api:
@@ -43,6 +43,18 @@ services:
       - .env
     ports:
       - "8002:8002"
+    restart: unless-stopped
+
+  plumber2-async-api-manual:
+    build:
+      context: .
+      dockerfile: Dockerfile.plumber
+    container_name: plumber2-async-api-manual
+    command: R --file=main.R --args --app=async_plumber2_manual
+    env_file:
+      - .env
+    ports:
+      - "8003:8003"
     restart: unless-stopped
   
   postgres:

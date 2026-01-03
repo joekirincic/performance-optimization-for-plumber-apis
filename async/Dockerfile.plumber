@@ -30,6 +30,7 @@ COPY R .
 EXPOSE 8000
 EXPOSE 8001
 EXPOSE 8002
+EXPOSE 8003
 
 # Run the API
 CMD ["Rscript", "main.R", "--app=sync"]

@@ -37,4 +37,15 @@ docker compose exec locust \
 echo "Copying results to local machine..."
 docker compose cp locust:/app/detailed_request_results.csv load-test-results/load-test_plumber-async.csv
 
+# Run load test against plumber2-async-api
+echo "Starting headless load test against service plumber2-async-api-manual..."
+docker compose exec locust \
+  locust -f locustfile.py \
+  --headless -u 200 -r 10 -t 1m \
+  --host http://plumber2-async-api-manual:8003
+
+echo "Copying results to local machine..."
+docker compose cp locust:/app/detailed_request_results.csv load-test-results/load-test_plumber2-async-manual.csv
+
+
 echo "Load test complete."
